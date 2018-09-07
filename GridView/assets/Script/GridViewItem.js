@@ -29,5 +29,10 @@ cc.Class({
         this.stageLabel.string = '第' + (stageNum + 1) + '关';
     },
 
+    // 点击按钮
+    onStartGame: function () {
+        console.log('点击了开始按钮');
+    }
+
     // update (dt) {},
 });

@@ -107,14 +107,15 @@ cc.Class({
 
 
     //
-    _updateState: function() {
+    _updateState: function () {
 
     },
 
 
     // 关卡模式的配置
-    onLoadStageConfig: function() {
+    onLoadStageConfig: function () {
         this.btnArray = [];// 保存按钮的数组
+        this.stageInfoArray = [];// 用来保存数据的数组
         /** 
          * 这几个值，用来计算按钮的位置，以及实现复用功能
          */
@@ -146,8 +147,8 @@ cc.Class({
      * 设置数据数组
      * @param array 数据数组
      */
-    setDataArray: function(array, componentName, funcName) {
-        if (typeof array != 'array') {
+    setDataArray: function (array, componentName, funcName) {
+        if (!array) {
             return;
         }
         // 关卡模式，每一关的配置
@@ -190,7 +191,7 @@ cc.Class({
     },
 
     // 监听滚动视图的滚动回调
-    onScrollingCb: function(target, event) {
+    onScrollingCb: function (target, event) {
         // scrollView事件枚举类型地址：  http://docs.cocos.com/creator/api/zh/enums/ScrollView.EventType.html
         if (this.direction === Direction.VERTICAL) {
             var stageCount = this.stageInfoArray.length;
@@ -300,7 +301,7 @@ cc.Class({
     },
 
     // 关闭按钮
-    onClose: function() {
+    onClose: function () {
 
     },
 
