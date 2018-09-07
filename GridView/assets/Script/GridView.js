@@ -65,16 +65,16 @@ cc.Class({
     },
 
     onLoad() {
-        this.onLoadStageConfig();
-        let ary = [];
-        for (var i = 0; i < 99; i++) {
-            let stage = i;
-            ary.push({
-                'stageNum': stage,
-                'starNum': 3,
-            });
-        }
-        this.setDataArray(ary, 'GridViewItem', 'setStageInfo');
+        // this.onLoadStageConfig();
+        // let ary = [];
+        // for (var i = 0; i < 99; i++) {
+        //     let stage = i;
+        //     ary.push({
+        //         'stageNum': stage,
+        //         'starNum': 3,
+        //     });
+        // }
+        // this.setDataArray(ary, 'GridViewItem', 'setStageInfo');
     },
 
     /**
@@ -114,6 +114,15 @@ cc.Class({
 
     // 关卡模式的配置
     onLoadStageConfig: function () {
+        if (this.btnArray && this.btnArray.length > 0) {
+            for (var i = this.btnArray.length - 1; i >= 0; i--) {
+                var com = this.btnArray[i];
+                if (com && com.node) {
+                    com.node.destroy();
+                }
+                this.btnArray.splice(i, 1);
+            }
+        }
         this.btnArray = [];// 保存按钮的数组
         this.stageInfoArray = [];// 用来保存数据的数组
         /** 
@@ -128,11 +137,13 @@ cc.Class({
         this.startX = this.svWidth / 2;// 滚动视图的content的初始内容
         if (this.direction == Direction.VERTICAL) {// vertical
             this.yMax = Math.ceil(this.view.height / this.btnHeight);
+            // this.yMax = Math.ceil(250 / this.btnHeight);
             this._dRealCount = this.yMax + 2;
             this._scrollView.vertical = true;
             this._scrollView.horizontal = false;
         } else {// horizontal
             this.xMax = Math.ceil(this.view.width / this.btnWidth);
+            // this.xMax = Math.ceil(240 / this.btnWidth);
             this._dRealCount = this.xMax + 2;
             this._scrollView.vertical = false;
             this._scrollView.horizontal = true;
@@ -159,20 +170,22 @@ cc.Class({
         if (!array) {
             return;
         }
+        this.onLoadStageConfig();
         // 关卡模式，每一关的配置
         this.stageInfoArray = array;
 
         if (this.direction == Direction.VERTICAL) {// vertical
             /**
-                     * 这里讲一下服用的逻辑：
-                     * 一个页面横向最多放4个按钮，纵向最多放5个，这是基本条件。
-                     * 然后，为了复用，多创建1行，也就是5 + 2 行。
-                     * 同时，还要判断按钮的数量，如果小于4 x (5 + 2)的话，就不需要考虑复用了，
-                     * 直接就有多少创建多少个。
-                     * 如果多余这个数值，就只创建 4 x (5 + 2) 个，这样的话，当滑动的时候，
-                     * 页面最多实际上能显示 4 x (5 + 2) 个，因为滑动的时候，会有半个的情况。
-                     * 水平滚动的实现逻辑类似
-                     */
+             * 这里讲一下服用的逻辑：
+             * 一个页面横向最多放4个按钮，纵向最多放5个，这是基本条件。
+             * 然后，为了复用，多创建1行，也就是5 + 2 行。
+             * 同时，还要判断按钮的数量，如果小于4 x (5 + 2)的话，就不需要考虑复用了，
+             * 直接就有多少创建多少个。
+             * 如果多余这个数值，就只创建 4 x (5 + 2) 个，这样的话，当滑动的时候，
+             * 页面最多实际上能显示 4 x (5 + 2) 个，因为滑动的时候，会有半个的情况。
+             * 水平滚动的实现逻辑类似
+             */
+            this._dRealCount = this.yMax + 2;
             var sum = this.xMax * this._dRealCount;
             if (this.stageInfoArray.length < this.xMax * this._dRealCount) {
                 sum = this.stageInfoArray.length;
@@ -181,6 +194,10 @@ cc.Class({
             for (var i = 0; i < sum; i++) {
                 let button = cc.instantiate(this.gridItemPrefab);
                 let com = button.getComponent(componentName);// 根据名称，获取组件
+                if (!com) {
+                    console.log('no such component named ' + componentName);
+                    return;
+                }
                 com.__cbFunc = null;// 回调方法
                 let proto = com.__proto__;
                 if (proto[funcName]) {
@@ -199,6 +216,7 @@ cc.Class({
             }
             this.scrollContent.height = this.btnHeight * Math.ceil(this.stageInfoArray.length / this.xMax);
         } else {// horizontal
+            this._dRealCount = this.xMax + 2;
             var sum = this.xMax * this._dRealCount;
             if (this.stageInfoArray.length < this.yMax * this._dRealCount) {
                 sum = this.stageInfoArray.length;
