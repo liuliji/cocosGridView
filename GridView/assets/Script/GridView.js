@@ -129,9 +129,13 @@ cc.Class({
         if (this.direction == Direction.VERTICAL) {// vertical
             this.yMax = Math.ceil(this.view.height / this.btnHeight);
             this._dRealCount = this.yMax + 2;
+            this._scrollView.vertical = true;
+            this._scrollView.horizontal = false;
         } else {// horizontal
             this.xMax = Math.ceil(this.view.width / this.btnWidth);
             this._dRealCount = this.xMax + 2;
+            this._scrollView.vertical = false;
+            this._scrollView.horizontal = true;
         }
         // let events = this._scrollView.scrollEvents
         // var sv = this._scrollView;

@@ -342,8 +342,8 @@
     "content": {
       "__id__": 9
     },
-    "horizontal": true,
-    "vertical": false,
+    "horizontal": false,
+    "vertical": true,
     "inertia": true,
     "brake": 0.75,
     "elastic": true,
@@ -584,8 +584,8 @@
     "scrollContent": {
       "__id__": 9
     },
-    "xMax": 4,
-    "yMax": 4,
+    "xMax": 5,
+    "yMax": 5,
     "_dRealCount": 0,
     "_N$direction": 1
   },
