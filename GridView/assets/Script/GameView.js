@@ -10,7 +10,7 @@ cc.Class({
 
     onLoad() {
         var offset = new cc.Vec2(0, 300);
-        this.scrollView.scrollToOffset(offset, 1.0);
+        // this.scrollView.scrollToOffset(offset, 1.0);
     },
 
     start() {

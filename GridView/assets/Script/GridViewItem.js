@@ -21,6 +21,9 @@ cc.Class({
      * @param stageInfo 通关条件以及关卡相关的信息
      */
     setStageInfo: function (data) {
+        if (!data) {
+            return;
+        }
         var stageNum = data.stageNum;
         var starNum = data.starNum;
         let stageInfo = data;

@@ -261,13 +261,13 @@
     "_cascadeOpacityEnabled": true,
     "_anchorPoint": {
       "__type__": "cc.Vec2",
-      "x": 1,
+      "x": 0,
       "y": 0
     },
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 10,
-      "height": 30
+      "height": 156.25
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -275,8 +275,8 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": -1,
-      "y": 0
+      "x": -10.999999999999886,
+      "y": -31.249999999999943
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -342,8 +342,8 @@
     "content": {
       "__id__": 9
     },
-    "horizontal": false,
-    "vertical": true,
+    "horizontal": true,
+    "vertical": false,
     "inertia": true,
     "brake": 0.75,
     "elastic": true,
@@ -354,7 +354,9 @@
       }
     ],
     "cancelInnerEvents": true,
-    "_N$horizontalScrollBar": null,
+    "_N$horizontalScrollBar": {
+      "__id__": 7
+    },
     "_N$verticalScrollBar": {
       "__id__": 7
     }
@@ -383,7 +385,7 @@
     "_cascadeOpacityEnabled": true,
     "_anchorPoint": {
       "__type__": "cc.Vec2",
-      "x": 0.5,
+      "x": 0,
       "y": 1
     },
     "_contentSize": {
@@ -397,8 +399,8 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": -3.9,
-      "y": 115.3
+      "x": -112,
+      "y": 121
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -583,9 +585,9 @@
       "__id__": 9
     },
     "xMax": 4,
-    "yMax": 1,
-    "_yRealCount": 0,
-    "_N$direction": 0
+    "yMax": 4,
+    "_dRealCount": 0,
+    "_N$direction": 1
   },
   {
     "__type__": "cc.Canvas",
