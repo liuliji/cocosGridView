@@ -258,6 +258,10 @@ cc.Class({
                         continue;
                     }
                     if (com.node) {
+                        // 防止多次设置，消耗性能
+                        if (com.node.y == y) {
+                            continue;
+                        }
                         com.node.setPositionY(y);
                     }
                     let info = this.stageInfoArray[stageId];
