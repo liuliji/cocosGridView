@@ -146,6 +146,8 @@ cc.Class({
     /**
      * 设置数据数组
      * @param array 数据数组
+     * @param componentName item上挂载的用来处理逻辑的脚本名字
+     * @param funcName  对应的处理方法的名字
      */
     setDataArray: function (array, componentName, funcName) {
         if (!array) {
