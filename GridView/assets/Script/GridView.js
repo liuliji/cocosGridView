@@ -65,16 +65,7 @@ cc.Class({
     },
 
     onLoad() {
-        // this.onLoadStageConfig();
-        // let ary = [];
-        // for (var i = 0; i < 99; i++) {
-        //     let stage = i;
-        //     ary.push({
-        //         'stageNum': stage,
-        //         'starNum': 3,
-        //     });
-        // }
-        // this.setDataArray(ary, 'GridViewItem', 'setStageInfo');
+        this.onLoadStageConfig();
     },
 
     /**
@@ -85,8 +76,6 @@ cc.Class({
         if (!this.target) {
             this.target = this.node;
         }
-        // this._applyTarget();
-        // this._updateState();
         cc.log('调用了该方法');
         if (this.direction == Direction.VERTICAL) {
             cc.Class.attr(this, "xMax", {
@@ -148,16 +137,6 @@ cc.Class({
             this._scrollView.vertical = false;
             this._scrollView.horizontal = true;
         }
-        // let events = this._scrollView.scrollEvents
-        // var sv = this._scrollView;
-        // this._scrollView.scrollEvents.push({
-        //     component: "GridView",
-        //     customEventData: "",
-        //     handler: "onScrollingCb",
-        //     target: sv.node,
-        // });
-
-
     },
 
     /**
@@ -170,7 +149,6 @@ cc.Class({
         if (!array) {
             return;
         }
-        this.onLoadStageConfig();
         // 关卡模式，每一关的配置
         this.stageInfoArray = array;
 
@@ -376,8 +354,6 @@ cc.Class({
 
                     if (i < yuShu) {
                         var line = 0;
-                        // stageId = line * this.xMax + j;
-                        // y = -(line + 0.5) * this.btnHeight;
                         x = ((beiShu + 1) * this._dRealCount + i + 0.5) * this.btnWidth;
                         stageId = ((beiShu + 1) * this._dRealCount + i) * this.yMax + j;
                     } else {
@@ -412,38 +388,7 @@ cc.Class({
 
     },
 
-
-    // // 滚动到当前的关卡位置
-    // scrollToCurrentStage: function() {
-    //     setTimeout(() => {
-    //         var stageCount = this.stageInfoArray.length;
-    //         var playedCount = this.stageAry.length;
-    //         var lines = Math.ceil(stageCount / this.xMax);
-    //         var playedLines = 0;
-    //         if (playedCount == stageCount) {
-    //             playedLines == lines;
-    //         } else {
-    //             playedLines = Math.ceil(playedCount / 4 + 1);
-    //         }
-    //         if (playedLines <= this.yMax) {// 前几关，不动
-    //             return;
-    //         } else if (lines - playedLines > this.yMax / 2) {// 正常滚动
-    //             let y = (playedLines - this.yMax / 2) * this.btnHeight;
-    //             var offset = new cc.Vec2(0, y);
-    //             this._scrollView.scrollToOffset(offset, 1.0);
-    //         } else {// 直接滚动到底部
-    //             this._scrollView.scrollToBottom(1.0);
-    //         }
-    //     }, 500);
-
-    // },
-
     start() {
-
-    },
-
-    // 关闭按钮
-    onClose: function () {
 
     },
 

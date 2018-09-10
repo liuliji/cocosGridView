@@ -9,6 +9,10 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad() {
+
+    },
+
+    start() {
         var offset = new cc.Vec2(0, 300);
         // this.scrollView.scrollToOffset(offset, 1.0);
         let gridView = this.scrollView.getComponent('GridView');
@@ -21,10 +25,6 @@ cc.Class({
             });
         }
         gridView.setDataArray(ary, 'GridViewItem', 'setStageInfo');
-    },
-
-    start() {
-
     },
 
     // update (dt) {},
