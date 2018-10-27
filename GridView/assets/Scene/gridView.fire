@@ -45,7 +45,7 @@
     "_globalZOrder": 0,
     "_opacityModifyRGB": false,
     "groupIndex": 0,
-    "autoReleaseAssets": false
+    "autoReleaseAssets": null
   },
   {
     "__type__": "cc.Node",
@@ -585,7 +585,7 @@
       "__id__": 9
     },
     "xMax": 5,
-    "yMax": 5,
+    "yMax": 2,
     "_dRealCount": 0,
     "_N$direction": 1
   },

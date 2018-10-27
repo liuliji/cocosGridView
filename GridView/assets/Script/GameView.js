@@ -17,7 +17,7 @@ cc.Class({
         // this.scrollView.scrollToOffset(offset, 1.0);
         let gridView = this.scrollView.getComponent('GridView');
         let ary = [];
-        for (var i = 0; i < 99; i++) {
+        for (var i = 0; i < 13; i++) {
             let stage = i;
             ary.push({
                 'stageNum': stage,

@@ -62,10 +62,7 @@ cc.Class({
             // }
         },
         _dRealCount: 0,// 指定方向上轴实际上存放了几个
-    },
 
-    onLoad() {
-        this.onLoadStageConfig();
     },
 
     /**
@@ -94,12 +91,53 @@ cc.Class({
         }
     },
 
+    onLoad() {
+        this.initNodePool();
+        this.onLoadStageConfig();
+    },
+
+    // 对象池初始化
+    initNodePool: function () {
+        this.nodePool = new cc.NodePool();
+    },
+
+    // 创建按钮
+    createButton: function () {
+        let button = null;
+        if (this.nodePool) {
+            if (this.nodePool.size() > 0) {
+                button = this.nodePool.get();
+            } else {
+                if (this.gridItemPrefab) {
+                    button = cc.instantiate(this.gridItemPrefab);
+                }
+            }
+        }
+        return button;
+    },
+
+    // 移除节点
+    removeButton: function (button) {
+        if (this.nodePool) {
+            this.nodePool.put(button);
+        }
+    },
+
+    // 移除所有的对象
+    removeAllNodes: function () {
+        let children = this.scrollContent.children;
+        for (var i = children.length - 1; i >= 0; i--) {
+            let child = children[i];
+            if (child) {
+                this.nodePool.put(child);
+            }
+        }
+    },
 
     //
     _updateState: function () {
 
     },
-
 
     // 关卡模式的配置
     onLoadStageConfig: function () {
@@ -149,6 +187,9 @@ cc.Class({
         if (!array) {
             return;
         }
+        // this.scrollContent.removeAllChildren();
+        this.removeAllNodes();// 通过对象池，移除所有的子节点
+        this.btnArray = [];
         // 关卡模式，每一关的配置
         this.stageInfoArray = array;
 
@@ -170,7 +211,8 @@ cc.Class({
             }
             var lineNum = 0;// 行数，表示当前创建到了第几行
             for (var i = 0; i < sum; i++) {
-                let button = cc.instantiate(this.gridItemPrefab);
+                // let button = cc.instantiate(this.gridItemPrefab);
+                let button = this.createButton();
                 let com = button.getComponent(componentName);// 根据名称，获取组件
                 if (!com) {
                     console.log('no such component named ' + componentName);
@@ -180,12 +222,14 @@ cc.Class({
                 let proto = com.__proto__;
                 if (proto[funcName]) {
                     com.__cbFunc = proto[funcName];
-                    com.__cbFunc(this.stageInfoArray[i]);
+                    if (this.stageInfoArray[i]) {
+                        com.__cbFunc(this.stageInfoArray[i]);
+                    }
                 }
                 // this.btnArray.push(button);
                 this.btnArray.push(com);
                 let x = button.width * (i % this.xMax + 0.5) - this.scrollContent.width * this.scrollContent.anchorX;
-                let y = -button.height * (0.5 + lineNum) + this.view.height * this.scrollContent.anchorY;
+                let y = -button.height * (0.5 + lineNum) + this.view.height * (1 - this.scrollContent.anchorY);
                 button.setPosition(x, y);
                 this.scrollContent.addChild(button);
                 if ((i + 1) % this.xMax == 0) {// 该换行了
@@ -194,14 +238,16 @@ cc.Class({
             }
             this.scrollContent.height = this.btnHeight * Math.ceil(this.stageInfoArray.length / this.xMax);
         } else {// horizontal
+            this._scrollView.scrollToLeft(0.1);
             this._dRealCount = this.xMax + 2;
-            var sum = this.xMax * this._dRealCount;
+            var sum = this.yMax * this._dRealCount;
             if (this.stageInfoArray.length < this.yMax * this._dRealCount) {
                 sum = this.stageInfoArray.length;
             }
             var lineNum = 0;// 行数，表示当前创建到了第几行
             for (var i = 0; i < sum; i++) {
-                let button = cc.instantiate(this.gridItemPrefab);
+                // let button = cc.instantiate(this.gridItemPrefab);
+                let button = this.createButton();
                 let com = button.getComponent(componentName);// 根据名称，获取组件
                 com.__cbFunc = null;// 回调方法
                 let proto = com.__proto__;
@@ -321,11 +367,12 @@ cc.Class({
             }
             this.scrollContent.y;// 根据y值来判断
             // 移动到最底部了，就不再复用了
-            if (this.scrollContent.y + this.startX + this.btnWidth > this.scrollContent.width) {
+            if (-this.scrollContent.x + this.startX + this.btnWidth > this.scrollContent.width) {
                 return;
             }
             // 移动到了顶部，也不进行复用
             if (this.scrollContent.x > -this.startX) {
+                // debugger;
                 return;
             }
             var deltX = -(this.scrollContent.x + this.startX);// y轴滑动的相对距离
@@ -394,4 +441,8 @@ cc.Class({
 
     update(dt) {
     },
+
+    onDestroy() {
+        this.nodePool.clear();
+    }
 });
