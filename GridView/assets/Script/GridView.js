@@ -92,18 +92,28 @@ cc.Class({
     },
 
     onLoad() {
+        this.onInit();
+    },
+
+    onInit: function () {
         this.initNodePool();
         this.onLoadStageConfig();
+        this._init = true;// 表示已经初始化了
     },
 
     // 对象池初始化
     initNodePool: function () {
-        this.nodePool = new cc.NodePool();
+        if (!this.nodePool) {
+            this.nodePool = new cc.NodePool();
+        }
     },
 
     // 创建按钮
     createButton: function () {
         let button = null;
+        // if (!this.nodePool) {
+        //     this.initNodePool();
+        // }
         if (this.nodePool) {
             if (this.nodePool.size() > 0) {
                 button = this.nodePool.get();
@@ -186,6 +196,9 @@ cc.Class({
     setDataArray: function (array, componentName, funcName) {
         if (!array) {
             return;
+        }
+        if (!this._init) {
+            this.onInit();
         }
         // this.scrollContent.removeAllChildren();
         this.removeAllNodes();// 通过对象池，移除所有的子节点
@@ -443,6 +456,8 @@ cc.Class({
     },
 
     onDestroy() {
-        this.nodePool.clear();
+        if (this.nodePool) {
+            this.nodePool.clear();
+        }
     }
 });
