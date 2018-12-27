@@ -49,14 +49,20 @@ cc.Class({
 
         xMax: {
             default: 1,// 水平最多放几个
-            visible: true,// 是否可见
+            visible: (function () {
+                return this.direction === Direction.VERTICAL
+            }),// 是否可见
+            // visible: true,// 是否可见
             // notify() {
             //     this._updateState();
             // }
         },
         yMax: {
             default: 1,// 垂直最多放几个
-            visible: false,// 是否可见
+            visible: (function () {
+                return this.direction === Direction.HORIZONTAL
+            }),// 是否可见
+            // visible: false,// 是否可见
             // notify() {
             //     this._updateState();
             // }
@@ -64,6 +70,11 @@ cc.Class({
         _dRealCount: 0,// 指定方向上轴实际上存放了几个
 
     },
+
+    // __preload () {
+    //     cc.log('调用了该方法__preload');
+    //     this._directionChanged();
+    // },
 
     /**
      * 属性面板中，当方向修改的时候，调用该方法，
@@ -74,21 +85,21 @@ cc.Class({
             this.target = this.node;
         }
         cc.log('调用了该方法');
-        if (this.direction == Direction.VERTICAL) {
-            cc.Class.attr(this, "xMax", {
-                visible: true,
-            })
-            cc.Class.attr(this, "yMax", {
-                visible: false,
-            })
-        } else {
-            cc.Class.attr(this, "xMax", {
-                visible: false,
-            })
-            cc.Class.attr(this, "yMax", {
-                visible: true,
-            })
-        }
+        // if (this.direction == Direction.VERTICAL) {
+        //     cc.Class.attr(this, "xMax", {
+        //         visible: true,
+        //     })
+        //     cc.Class.attr(this, "yMax", {
+        //         visible: false,
+        //     })
+        // } else {
+        //     cc.Class.attr(this, "xMax", {
+        //         visible: false,
+        //     })
+        //     cc.Class.attr(this, "yMax", {
+        //         visible: true,
+        //     })
+        // }
     },
 
     onLoad() {

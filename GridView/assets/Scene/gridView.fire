@@ -45,7 +45,7 @@
     "_globalZOrder": 0,
     "_opacityModifyRGB": false,
     "groupIndex": 0,
-    "autoReleaseAssets": null
+    "autoReleaseAssets": false
   },
   {
     "__type__": "cc.Node",
@@ -587,7 +587,7 @@
     "xMax": 5,
     "yMax": 2,
     "_dRealCount": 0,
-    "_N$direction": 1
+    "_N$direction": 0
   },
   {
     "__type__": "cc.Canvas",
