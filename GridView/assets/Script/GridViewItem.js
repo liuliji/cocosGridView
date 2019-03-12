@@ -24,12 +24,12 @@ cc.Class({
         if (!data) {
             return;
         }
-        var stageNum = data.stageNum;
-        var starNum = data.starNum;
-        let stageInfo = data;
-        this.stageInfo = stageInfo;
-        this._stageNum = stageNum;
-        this.stageLabel.string = '第' + (stageNum + 1) + '关';
+        // var stageNum = data.stageNum;
+        // var starNum = data.starNum;
+        // let stageInfo = data;
+        // this.stageInfo = stageInfo;
+        // this._stageNum = stageNum;
+        this.stageLabel.string = '第' + (data) + '关';
     },
 
     // 点击按钮

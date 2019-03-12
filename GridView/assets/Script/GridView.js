@@ -106,6 +106,7 @@ cc.Class({
         this.onInit();
     },
 
+
     onInit: function () {
         this.initNodePool();
         this.onLoadStageConfig();
@@ -195,6 +196,18 @@ cc.Class({
             this._dRealCount = this.xMax + 2;
             this._scrollView.vertical = false;
             this._scrollView.horizontal = true;
+        }
+
+        // 注册事件
+        // 参考文档 https://docs.cocos.com/creator/api/zh/classes/Button.html?q=cc.Component.EventHandler
+        let eventHandler = new cc.Component.EventHandler();
+        eventHandler.target = this.node;
+        eventHandler.component = "GridView";
+        eventHandler.handler = "onScrollingCb";
+        // eventHandler.emit(["param1", "param2", ....]);
+        if (this._scrollView){
+            let scrollEvents = this._scrollView.scrollEvents;
+            scrollEvents.push(eventHandler);
         }
     },
 
@@ -297,6 +310,163 @@ cc.Class({
 
 
 
+    },
+
+    /**
+     * 这里说明一下，为什么每次设置了数据之后，要调用该方法。
+     * 问题说明：每次设置数据的时候，所有的按钮都在最顶部。那么，如果我们把滚动视图往下滑了一段距离，
+     * 如果我们滑动了一段距离，刚好能展示出默认创建按钮下面的按钮，那么，由于默认创建按钮的位置问题，
+     * 就会出现下面没有按钮的情况。
+     * 解决办法：因此，当每次设置好了出事的数据之后，再重新处理一下，判断当前视图的位置，
+     * 然后，重新进行相关的复用操作，保证按钮显示正常。
+     */
+    onResetItemPosition(){
+        if (this.direction === Direction.VERTICAL) {
+            var stageCount = this.stageInfoArray.length;
+            /**
+             * 如果复用的时候最多摆放的按钮数大等于关卡数，表示当前关卡比较少，
+             * 是按照关卡数进行创建按钮的，所以，这个时候，不需要复用，
+             * 所以什么都不处理
+             */
+            if (this.xMax * this._dRealCount >= stageCount) {
+                return;
+            }
+            this.scrollContent.y;// 根据y值来判断
+            // 移动到了顶部，也不进行复用
+            if (this.scrollContent.y < this.startY) {
+                return;
+            }
+            var deltY = (this.scrollContent.y - this.startY);// y轴滑动的相对距离
+            var deltLine = Math.floor(deltY / this.btnHeight);// 相对移动了多少行
+            var canShowNumber = this.xMax * (this.yMax + deltLine);// 滑动过程中，实际上可以展示到多少个关卡
+
+            var stageNumber = this.stageInfoArray.length;// 总共有多少的关卡
+            var realNumber = 0;// 实际上展示出来的按钮数
+            if (stageNumber > canShowNumber) {// 可以展示多少个和总共有多少个比较，谁小用谁
+                realNumber = canShowNumber;
+            } else {
+                realNumber = stageNumber;
+            }
+
+            for (var i = 0; i < this._dRealCount; i++) {
+                for (var j = 0; j < this.xMax; j++) {
+                    let btnId = i * this.xMax + j;// 按钮在数组中的固定的Id
+                    let stageId;// 表示当前是第几个按钮，同时，对应自己该关的数据的Id
+                    let y;// y轴的坐标
+
+                    var yuShu = 0;// 余数
+                    var beiShu = 0;// 倍数
+
+                    yuShu = deltLine % this._dRealCount;
+                    beiShu = Math.floor(deltLine / this._dRealCount);
+
+                    if (i < yuShu) {
+                        var line = 0;
+                        // stageId = line * this.xMax + j;
+                        // y = -(line + 0.5) * this.btnHeight;
+                        y = -((beiShu + 1) * this._dRealCount + i + 0.5) * this.btnHeight;
+                        stageId = ((beiShu + 1) * this._dRealCount + i) * this.xMax + j;
+                    } else {
+                        y = -(beiShu * this._dRealCount + i + 0.5) * this.btnHeight;
+                        stageId = (beiShu * this._dRealCount + i) * this.xMax + j;
+                    }
+                    if (stageId >= stageCount) {// 表示已经到了最后关，那么就不移动按钮了
+                        continue;
+                    }
+                    // 设置按钮的y轴坐标
+                    // let btn = this.btnArray[btnId];
+                    let com = this.btnArray[btnId];
+                    if (!com) {
+                        continue;
+                    }
+                    if (com.node) {
+                        // 防止多次设置，消耗性能
+                        if (com.node.y == y) {
+                            continue;
+                        }
+                        com.node.setPositionY(y);
+                    }
+                    let info = this.stageInfoArray[stageId];
+                    // 设置数据
+                    let stageInfo = this.stageInfoArray[stageId];
+                    if (com.__cbFunc) {
+                        com.__cbFunc(stageInfo);
+                    }
+                }
+            }
+        } else {
+            var stageCount = this.stageInfoArray.length;
+            /**
+             * 如果复用的时候最多摆放的按钮数大等于关卡数，表示当前关卡比较少，
+             * 是按照关卡数进行创建按钮的，所以，这个时候，不需要复用，
+             * 所以什么都不处理
+             */
+            if (this.yMax * this._dRealCount >= stageCount) {
+                return;
+            }
+            this.scrollContent.y;// 根据y值来判断
+            // 移动到了顶部，也不进行复用
+            if (this.scrollContent.x > -this.startX) {
+                // debugger;
+                return;
+            }
+            var deltX = -(this.scrollContent.x + this.startX);// y轴滑动的相对距离
+            var deltLine = Math.floor(deltX / this.btnWidth);// 相对移动了多少行
+            var canShowNumber = this.yMax * (this.xMax + deltLine);// 滑动过程中，实际上可以展示到多少个关卡
+
+            var stageNumber = this.stageInfoArray.length;// 总共有多少的关卡
+            var realNumber = 0;// 实际上展示出来的按钮数
+            if (stageNumber > canShowNumber) {// 可以展示多少个和总共有多少个比较，谁小用谁
+                realNumber = canShowNumber;
+            } else {
+                realNumber = stageNumber;
+            }
+
+            for (var i = 0; i < this._dRealCount; i++) {
+                for (var j = 0; j < this.yMax; j++) {
+                    let btnId = i * this.yMax + j;// 按钮在数组中的固定的Id
+                    let stageId;// 表示当前是第几个按钮，同时，对应自己该关的数据的Id
+                    let x;// x轴的坐标
+
+                    var yuShu = 0;// 余数
+                    var beiShu = 0;// 倍数
+
+                    yuShu = deltLine % this._dRealCount;
+                    beiShu = Math.floor(deltLine / this._dRealCount);
+
+                    if (i < yuShu) {
+                        var line = 0;
+                        x = ((beiShu + 1) * this._dRealCount + i + 0.5) * this.btnWidth;
+                        stageId = ((beiShu + 1) * this._dRealCount + i) * this.yMax + j;
+                    } else {
+                        x = (beiShu * this._dRealCount + i + 0.5) * this.btnWidth;
+                        stageId = (beiShu * this._dRealCount + i) * this.yMax + j;
+                    }
+                    if (stageId >= stageCount) {// 表示已经到了最后关，那么就不移动按钮了
+                        continue;
+                    }
+                    // 设置按钮的y轴坐标
+                    // let btn = this.btnArray[btnId];
+                    let com = this.btnArray[btnId];
+                    if (!com) {
+                        continue;
+                    }
+                    if (com.node) {
+                        // 防止多次设置，消耗性能
+                        if (com.node.x == x) {
+                            continue;
+                        }
+                        com.node.setPositionX(x);
+                    }
+                    let info = this.stageInfoArray[stageId];
+                    // 设置数据
+                    let stageInfo = this.stageInfoArray[stageId];
+                    if (com.__cbFunc) {
+                        com.__cbFunc(stageInfo);
+                    }
+                }
+            }
+        }
     },
 
     // 监听滚动视图的滚动回调
